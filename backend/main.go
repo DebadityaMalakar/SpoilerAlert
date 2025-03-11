@@ -26,7 +26,12 @@ func main() {
 	app.Post("/login", handlers.Login)
 
 	app.Get("/api/user/:_id", handlers.GetUserByID)
-	app.Post("/api/food", handlers.AddFoodItem)
+	app.Post("/api/food/add", handlers.AddFoodItem)
+
+	app.Get("/api/food", handlers.GetFoodList)
+	app.Get("/api/food/image/:id", handlers.GetFoodImage)
+
+	app.Delete("/api/food/delete/:id", handlers.DeleteFoodItem)
 
 	// Start server
 	app.Listen(":3000")

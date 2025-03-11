@@ -23,15 +23,6 @@ export default function Layout() {
         }}
       />
 
-      {/* Search Tab */}
-      <Tabs.Screen
-        name="search"
-        options={{
-          title: 'Search',
-          tabBarIcon: ({ color, size }) => <MaterialIcons name="search" size={size} color={color} />,
-        }}
-      />
-
       {/* Game Tab */}
       <Tabs.Screen
         name="game"

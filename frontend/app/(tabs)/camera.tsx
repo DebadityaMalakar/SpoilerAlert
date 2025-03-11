@@ -4,7 +4,7 @@ import * as MediaLibrary from 'expo-media-library';
 import { Button, StyleSheet, Text, TouchableOpacity, View, Alert, Platform } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Entypo from '@expo/vector-icons/Entypo';
-import * as Speech from 'expo-speech'; // Import expo-speech
+import * as Speech from 'expo-speech';
 
 export default function CameraScreen() {
   const [facing, setFacing] = useState<CameraType>('back');
@@ -44,7 +44,8 @@ export default function CameraScreen() {
     try {
       setIsProcessing(true);
       setClassification(null);
-      
+
+      // Capture the image
       const photoResult = await cameraRef.current.takePictureAsync({ 
         base64: true,
         quality: 0.8,
@@ -57,9 +58,9 @@ export default function CameraScreen() {
       }
 
       const base64Data = photoResult.base64;
-      const serverUrl = 'http://10.9.175.241:8000/predict/';
+      const serverUrl = 'http://192.168.158.86:8000/predict/';
 
-      // 🔥 Send image to server
+      // Send image to the prediction server
       const response = await fetch(serverUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -68,22 +69,50 @@ export default function CameraScreen() {
 
       const result = await response.json();
       if (response.ok && result.predicted_class !== undefined) {
-        const classificationResult = result.predicted_class === 0 ? 'Not Rotten' : 'Rotten';
-        setClassification(classificationResult);
+        const foodState = result.predicted_class === 0 ? 'Not Rotten' : 'Rotten';
+        setClassification(foodState);
+        console.log('Classification:', foodState); // Debugging line
 
-        // 🔥 Speak the classification result
-        Speech.speak(`The food is ${classificationResult}`, {
-          language: 'en', // Language code
-          rate: 1.0, // Speed of speech
-          pitch: 1.0, // Pitch of speech
+        // Speak the food state
+        Speech.speak(`The food is ${foodState}`, {
+          language: 'en',
+          rate: 1.0,
+          pitch: 1.0,
         });
+
+        // Create FormData
+        const formData = new FormData();
+        formData.append('image', {
+          uri: photoResult.uri,
+          name: 'photo.jpg',
+          type: 'image/jpeg',
+        } as any); // `as any` to fix TypeScript FormData type issue
+        formData.append('food_state', foodState);
+        formData.append('food_name', 'Sample Food'); // Optional
+        formData.append('food_type', 'Sample Type'); // Optional
+
+        const backendUrl = 'http://192.168.158.114:3000/api/food/add';
+
+        const backendResponse = await fetch(backendUrl, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Accept': 'application/json', // Accept JSON response
+          },
+        });
+
+        const backendResult = await backendResponse.json();
+        if (!backendResponse.ok) {
+          throw new Error(backendResult.message || 'Failed to send data to the backend.');
+        }
+
+        console.log('Successfully sent data:', backendResult);
       } else {
-        Alert.alert('Error', 'Invalid response from server.');
+        Alert.alert('Error', 'Invalid response from prediction server.');
       }
-      
     } catch (error) {
       console.error('Error:', error);
-      Alert.alert('Error', 'Failed to connect to the server.');
+      Alert.alert('Error', 'Failed to process the image.');
     } finally {
       setIsProcessing(false);
     }

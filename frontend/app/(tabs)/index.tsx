@@ -71,6 +71,11 @@ export default function HomeScreen(): JSX.Element {
   return (
     <View style={styles.container}>
       <View style={styles.section}>
+        <Text style={styles.headerAhh}>
+          Foods we recognise
+        </Text>
+      </View>
+      <View style={styles.section}>
         <Text style={styles.title}>Fruits</Text>
         <Slideshow data={fruits} />
       </View>
@@ -100,7 +105,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     fontFamily: 'OpenSans-Bold',
     marginBottom: 10,
   },
@@ -116,7 +121,11 @@ const styles = StyleSheet.create({
   slideText: {
     marginTop: 5,
     fontSize: 14,
-    fontFamily: 'Poppins-Bold',
-    fontWeight: 'bold',
+    fontFamily: "Poppins-Bold",
+    // fontWeight: 'bold',
   },
+  headerAhh: {
+    fontSize: 28,
+    fontFamily: "OpenSans-Bold"
+  }
 });

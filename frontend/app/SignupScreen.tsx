@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView,
 import { router } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 
-const API_URL = "http://10.9.164.95:3000/signup"; // Your API endpoint
+const API_URL = "http://192.168.158.114:3000/signup"; // Your API endpoint
 
 const SignUpScreen: React.FC = () => {
   const [name, setName] = useState<string>('');

@@ -17,7 +17,7 @@ export default function ProfileScreen() {
           throw new Error("User not authenticated");
         }
 
-        const response = await fetch(`http://10.9.164.95:3000/api/user/${userToken}`);
+        const response = await fetch(`http://192.168.158.114:3000/api/user/${userToken}`);
         const data = await response.json();
 
         if (!response.ok) {
@@ -64,7 +64,7 @@ export default function ProfileScreen() {
         <View style={styles.textContainer}>
           <Text style={styles.name}>{user.name}</Text>
           <Text style={styles.profession}>Profession: {user.profession}</Text>
-          <Text style={styles.tokens}>Tokens: {user.tokens}</Text>
+          {/* <Text style={styles.tokens}>Tokens: {user.tokens}</Text> */}
         </View>
       </View>
     </View>
