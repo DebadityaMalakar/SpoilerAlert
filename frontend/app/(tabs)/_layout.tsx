@@ -1,3 +1,4 @@
+import React from 'react';
 import { Tabs } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 
@@ -23,14 +24,6 @@ export default function Layout() {
         }}
       />
 
-      {/* Game Tab */}
-      <Tabs.Screen
-        name="game"
-        options={{
-          title: 'Game',
-          tabBarIcon: ({ color, size }) => <MaterialIcons name="sports-esports" size={size} color={color} />,
-        }}
-      />
 
       {/* Camera Tab */}
       <Tabs.Screen
@@ -38,6 +31,15 @@ export default function Layout() {
         options={{
           title: 'Camera',
           tabBarIcon: ({ color, size }) => <MaterialIcons name="camera-alt" size={size} color={color} />,
+        }}
+      />
+
+            {/* Game Tab */}
+            <Tabs.Screen
+        name="game"
+        options={{
+          title: 'Game',
+          tabBarIcon: ({ color, size }) => <MaterialIcons name="sports-esports" size={size} color={color} />,
         }}
       />
 

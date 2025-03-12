@@ -58,7 +58,7 @@ export default function CameraScreen() {
       }
 
       const base64Data = photoResult.base64;
-      const serverUrl = 'http://192.168.158.86:8000/predict/';
+      const serverUrl = 'http://10.9.175.241:8000/predict/';
 
       // Send image to the prediction server
       const response = await fetch(serverUrl, {
@@ -91,7 +91,7 @@ export default function CameraScreen() {
         formData.append('food_name', 'Sample Food'); // Optional
         formData.append('food_type', 'Sample Type'); // Optional
 
-        const backendUrl = 'http://192.168.158.114:3000/api/food/add';
+        const backendUrl = 'http://10.9.164.95:3000/api/food/add';
 
         const backendResponse = await fetch(backendUrl, {
           method: 'POST',

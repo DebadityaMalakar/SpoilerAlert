@@ -68,33 +68,56 @@ func Signup(c *fiber.Ctx) error {
 	return c.Status(201).JSON(response)
 }
 
+type UserLoginResponse struct {
+	ID           int    `json:"id"`
+	UniqueID     string `json:"_id"`
+	Name         string `json:"name"`
+	Email        string `json:"email"`
+	VerifyStatus bool   `json:"verify_status"`
+	PFP          string `json:"pfp,omitempty"`
+	PFPExt       string `json:"pfp_ext,omitempty"`
+	Message      string `json:"message"`
+}
+
+// LoginRequest represents the expected login input
+type LoginRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+// Login handles user authentication
 func Login(c *fiber.Ctx) error {
-	type LoginRequest struct {
-		Email    string `json:"email"`
-		Password string `json:"password"`
+	var req LoginRequest
+
+	// Parse JSON body
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(400).JSON(fiber.Map{"error": "Invalid JSON request"})
 	}
 
-	var req LoginRequest
-	if err := c.BodyParser(&req); err != nil {
-		return c.Status(400).JSON(fiber.Map{"error": "Cannot parse JSON"})
+	// Validate input
+	if req.Email == "" || req.Password == "" {
+		return c.Status(400).JSON(fiber.Map{"error": "Email and password are required"})
 	}
 
 	// Find user by email
 	var user models.User
 	if err := database.DB.Where("email = ?", req.Email).First(&user).Error; err != nil {
-		return c.Status(404).JSON(fiber.Map{"error": "User not found"})
+		return c.Status(401).JSON(fiber.Map{"error": "Invalid credentials"})
 	}
 
-	// Verify password
+	// Hash input password with stored salt
 	hashedPassword := HashPassword(req.Password, user.Salt)
+
+	// Compare passwords
 	if hashedPassword != user.Password {
 		return c.Status(401).JSON(fiber.Map{"error": "Invalid credentials"})
 	}
 
-	// Return only ID and UniqueID
-	response := UserResponse{
+	// Successful login response
+	response := UserLoginResponse{
 		ID:       user.ID,
 		UniqueID: user.UniqueID,
+		Message:  "Login successful",
 	}
 
 	return c.Status(200).JSON(response)

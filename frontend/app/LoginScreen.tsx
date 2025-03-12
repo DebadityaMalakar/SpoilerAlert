@@ -3,7 +3,7 @@ import { router } from "expo-router";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator, Platform } from "react-native";
 import * as SecureStore from "expo-secure-store";
 
-const API_URL = "http://192.168.158.114:3000/login";
+const API_URL = "http://10.9.164.95:3000/login";
 
 const LoginScreen: React.FC = () => {
   const [email, setEmail] = useState("");

@@ -15,22 +15,29 @@ func main() {
 	// Create Fiber app
 	app := fiber.New()
 
+	// Enable CORS
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "*",                          // Allow requests from this origin
-		AllowMethods: "GET,POST,PUT,DELETE",        // Allow these HTTP methods
-		AllowHeaders: "Origin,Content-Type,Accept", // Allow these headers
+		AllowOrigins: "*",
+		AllowMethods: "GET,POST,PUT,DELETE",
+		AllowHeaders: "Origin, Content-Type, Accept",
 	}))
 
 	// Auth routes
 	app.Post("/signup", handlers.Signup)
 	app.Post("/login", handlers.Login)
 
+	// User routes
 	app.Get("/api/user/:_id", handlers.GetUserByID)
-	app.Post("/api/food/add", handlers.AddFoodItem)
+	app.Put("/api/user/:_id/pfp", handlers.UpdateUserPFP)
+	app.Get("/api/user/image/:_id", handlers.GetUserPFP)
+	app.Put("/api/user/:_id/profession", handlers.UpdateUserProfession)
+	app.Put("/api/user/:_id/dob", handlers.UpdateUserDateOfBirth)
+	app.Put("/api/user/:_id/username", handlers.UpdateUsername)
 
+	// Food routes
+	app.Post("/api/food/add", handlers.AddFoodItem)
 	app.Get("/api/food", handlers.GetFoodList)
 	app.Get("/api/food/image/:id", handlers.GetFoodImage)
-
 	app.Delete("/api/food/delete/:id", handlers.DeleteFoodItem)
 
 	// Start server

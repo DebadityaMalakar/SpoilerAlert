@@ -1,8 +1,9 @@
-import { View, Text, StyleSheet, FlatList, Image } from 'react-native';
+import React,{ View, Text, StyleSheet, FlatList, Image, PanResponder } from 'react-native';
 import { router } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
-import {  useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Platform } from 'react-native';
+import * as Speech from 'expo-speech';
 
 const getAuthToken = async (): Promise<string | null> => {
   try {
@@ -30,27 +31,12 @@ const fruits: Item[] = [
 ];
 
 const vegetables: Item[] = [
-  { id: '1', name: 'Carrot', image: require('@/assets/images/carrot.png') },
-  { id: '2', name: 'Broccoli', image: require('@/assets/images/broccoli.png') },
+  { id: '1', name: 'Potato', image: require('@/assets/images/potatahhh.jpg') },
+  { id: '2', name: 'Cucumber', image: require('@/assets/images/cucumber.jpeg') },
   { id: '3', name: 'Tomato', image: require('@/assets/images/tomato.png') },
 ];
 
-type SlideshowProps = {
-  data: Item[];
-};
-
-const Slideshow: React.FC<SlideshowProps> = ({ data }) => {
-  useEffect(() => {
-    const checkAuth = async () => {
-      const token = await getAuthToken();
-      if (!token) {
-        router.replace('/LoginScreen');
-      }
-    };
-
-    checkAuth();
-  }, []);
-
+const Slideshow: React.FC<{ data: Item[] }> = ({ data }) => {
   return (
     <FlatList
       data={data}
@@ -68,18 +54,51 @@ const Slideshow: React.FC<SlideshowProps> = ({ data }) => {
 };
 
 export default function HomeScreen(): JSX.Element {
+  useEffect(() => {
+    const checkAuth = async () => {
+      const token = await getAuthToken();
+      if (!token) {
+        router.replace('/LoginScreen');
+      }
+    };
+    checkAuth();
+
+    // Enhanced TTS for better guidance
+    const speakInstructions = () => {
+      Speech.speak(
+        "Welcome to Spoiler Alert! This app helps you identify rotten food. " +
+        "Swipe left to open the camera and scan an item. " +
+        "Swipe right to go to your profile ",
+        { rate: 0.9, pitch: 1.0 }
+      );
+    };
+
+    speakInstructions();
+  }, []);
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderRelease: (_, gestureState) => {
+        if (gestureState.dx < -50) {
+          router.push('/camera'); // Swipe left → Camera
+        } else if (gestureState.dx > 50) {
+          router.push('/profile'); // Swipe right → Profile
+        }
+      },
+    })
+  ).current;
+
   return (
-    <View style={styles.container}>
+    <View style={styles.container} {...panResponder.panHandlers}>
       <View style={styles.section}>
-        <Text style={styles.headerAhh}>
-          Foods we recognise
-        </Text>
+        <Text style={styles.header}>Foods We Recognize</Text>
       </View>
       <View style={styles.section}>
         <Text style={styles.title}>Fruits</Text>
         <Slideshow data={fruits} />
       </View>
-
       <View style={styles.section}>
         <Text style={styles.title}>Vegetables</Text>
         <Slideshow data={vegetables} />
@@ -105,7 +124,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    // fontWeight: 'bold',
     fontFamily: 'OpenSans-Bold',
     marginBottom: 10,
   },
@@ -121,11 +139,10 @@ const styles = StyleSheet.create({
   slideText: {
     marginTop: 5,
     fontSize: 14,
-    fontFamily: "Poppins-Bold",
-    // fontWeight: 'bold',
+    fontFamily: 'Poppins-Bold',
   },
-  headerAhh: {
+  header: {
     fontSize: 28,
-    fontFamily: "OpenSans-Bold"
-  }
+    fontFamily: 'OpenSans-Bold',
+  },
 });
