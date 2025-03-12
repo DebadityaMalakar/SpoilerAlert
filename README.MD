@@ -14,3 +14,5 @@ This is an App I made for the Ossome Github Hackathon 2.0 within 36 hrs
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
+
+[![All Contributors](https://img.shields.io/github/all-contributors/DebadityaMalakar/SpoilerAlert?color=ee8449&style=flat-square)](#contributors)
