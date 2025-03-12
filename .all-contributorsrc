@@ -4,4 +4,36 @@
   "files": [
     "README.md"
   ],
+  "repoType": "github",
+  "commitConvention": "angular",
+  "contributors": [
+    {
+      "login": "DebadityaMalakar",
+      "name": "Debaditya Malakar",
+      "avatar_url": "https://avatars.githubusercontent.com/u/123065261?v=4",
+      "profile": "https://debaditya.is-a.dev/",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "Sal-1807",
+      "name": "Saloni Palo",
+      "avatar_url": "https://avatars.githubusercontent.com/u/180426234?v=4",
+      "profile": "https://github.com/Sal-1807",
+      "contributions": [
+        "code",
+        "ideas"
+      ]
+    },
+    {
+      "login": "TacoJr01",
+      "name": "Aditya Sunil Thattamparambil",
+      "avatar_url": "https://avatars.githubusercontent.com/u/197863534?v=4",
+      "profile": "https://github.com/TacoJr01",
+      "contributions": [
+        "design"
+      ]
+    }
+  ]
 }
